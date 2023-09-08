@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Fabric script that deletes out-of-date archives, using the function do_clean
+Fabric script that deletes out-of-date archives, using the function do_clean.
 """
 from fabric.api import *
 import os
@@ -18,10 +18,14 @@ def do_clean(num=0):
         num = 1
 
     with lcd("versions"):
-        local("ls -1t | tail -n +{} | xargs -I {{}} "
-              "rm -f {{}}".format(num + 1))
+        archives = sorted(os.listdir("."))
+        [archives.pop() for i in range(num)]
+        [local("rm -f ./{}".format(a)) for a in archives]
+
     with cd("/data/web_static/releases"):
-        run("ls -1t | tail -n +{} | xargs -I {{}} rm -rf {{}}".format(num + 1))
+        archives = run("ls -tr | grep 'web_static_'").split()
+        [archives.pop() for i in range(num)]
+        [run("rm -rf ./{}".format(a)) for a in archives]
 
 
 if __name__ == "__main__":
