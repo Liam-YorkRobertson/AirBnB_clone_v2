@@ -17,15 +17,18 @@ def do_clean(num=0):
     else:
         num = 1
 
-    with lcd("versions"):
-        archives = sorted(os.listdir("."))
-        [archives.pop() for i in range(num)]
-        [local("rm -f ./{}".format(a)) for a in archives]
+    versions_dir = Path("versions")
+    archives = sorted(versions_dir.glob("*"))
+    for archive in archives[:-num]:
+        archive.unlink()
 
-    with cd("/data/web_static/releases"):
-        archives = run("ls -tr | grep 'web_static_'").split()
-        [archives.pop() for i in range(num)]
-        [run("rm -rf ./{}".format(a)) for a in archives]
+    releases_dir = Path("/data/web_static/releases")
+    archives = sorted(releases_dir.glob("web_static_*"), key=os.path.getctime)
+    for archive in archives[:-num]:
+        if archive.is_dir():
+            shutil.rmtree(archive)
+        else:
+            archive.unlink()
 
 
 if __name__ == "__main__":
