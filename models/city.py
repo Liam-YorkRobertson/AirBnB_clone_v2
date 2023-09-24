@@ -15,3 +15,4 @@ class City(BaseModel, Base):
     name = Column(String(128), nullable=False)
     places = relationship("Place", cascade='all, delete, delete-orphan',
                           backref="cities")
+    id = Column(String(60), primary_key=True, nullable=False)
