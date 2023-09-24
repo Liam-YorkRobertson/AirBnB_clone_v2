@@ -2,7 +2,7 @@
 """
 Script that starts a flask web application.
 """
-from flask import Flask, escape
+from flask import Flask
 
 
 app = Flask(__name__)
@@ -28,7 +28,7 @@ def c(text):
 @app.route("/python/<text>", strict_slashes=False)
 def python(text):
     text = text.replace("_", " ")
-    return (f"Python {escape(text)}")
+    return (f"Python {text}")
 
 
 if __name__ == "__main__":
