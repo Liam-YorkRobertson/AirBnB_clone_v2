@@ -1,7 +1,5 @@
 #!/usr/bin/python3
-"""
-Script that starts a Flask web application.
-"""
+""" Script that starts a Flask web application. """
 from flask import Flask, render_template
 from models import storage
 from models.state import State
@@ -13,15 +11,15 @@ app = Flask(__name__)
 @app.route("/states", strict_slashes=False)
 def states():
     states = storage.all(State).values()
-    return render_template("9-states.html", states=states)
+    return render_template("9-states.html", state=states)
 
 
 @app.route("/states/<id>", strict_slashes=False)
 def states_id(id):
-    for state in storage.all(State).values():
-        if state.id == id:
-            return render_template("9-states.html", state=state)
-    return render_template("9-states.html")
+    state = storage.get(State, id)
+    if state:
+        return render_template("9-states.html", state=state)
+    return render_template("9-states.html", not_found=True)
 
 
 @app.teardown_appcontext
